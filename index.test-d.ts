@@ -18,7 +18,7 @@ expectType<Promise<number>>(
 );
 
 // Signal parameter is AbortSignal
-abortRace([
+void abortRace([
 	async signal => {
 		expectType<AbortSignal>(signal);
 		return 'ok';

@@ -15,8 +15,15 @@ export default async function abortRace(tasks, options = {}) {
 	}
 
 	const controllers = tasks.map(() => new AbortController());
+	let winnerIndex = -1;
 
-	const abortAllExcept = index => {
+	const abortLosers = index => {
+		if (winnerIndex !== -1) {
+			return;
+		}
+
+		winnerIndex = index;
+
 		for (const [i, controller] of controllers.entries()) {
 			if (i !== index) {
 				controller.abort(new Error('Race lost'));
@@ -41,20 +48,18 @@ export default async function abortRace(tasks, options = {}) {
 	try {
 		const promises = tasks.map(async (task, index) => {
 			const linkedSignal = parentSignal
-				? AbortSignal.any([controllers[index].signal, parentSignal])
+				? AbortSignal.any([controllers[index].signal, parentSignal]) // eslint-disable-line n/no-unsupported-features/node-builtins
 				: controllers[index].signal;
 
-			try {
-				const result = await task(linkedSignal);
-				abortAllExcept(index);
-				return result;
-			} catch (error) {
-				abortAllExcept(-1);
-				throw error;
-			}
+			const result = await task(linkedSignal);
+			abortLosers(index);
+			return result;
 		});
 
 		return await Promise.race(promises);
+	} catch (error) {
+		abortAll(error);
+		throw error;
 	} finally {
 		if (parentSignal) {
 			parentSignal.removeEventListener('abort', onParentAbort);
