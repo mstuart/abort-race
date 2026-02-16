@@ -1,0 +1,44 @@
+{
+	"name": "abort-race",
+	"version": "0.0.0-development",
+	"description": "Race multiple async operations with automatic AbortSignal cleanup for losers",
+	"license": "MIT",
+	"repository": "mstuart/abort-race",
+	"funding": "https://github.com/sponsors/mstuart",
+	"author": {
+		"name": "Mark Stuart",
+		"email": "mstuart@users.noreply.github.com",
+		"url": "https://github.com/mstuart"
+	},
+	"type": "module",
+	"exports": {
+		"types": "./index.d.ts",
+		"default": "./index.js"
+	},
+	"sideEffects": false,
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"test": "xo && ava && tsd"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"abort",
+		"race",
+		"promise",
+		"signal",
+		"cancel",
+		"abortcontroller",
+		"async",
+		"cleanup"
+	],
+	"devDependencies": {
+		"ava": "^6",
+		"tsd": "^0.31",
+		"xo": "^0.60"
+	}
+}
