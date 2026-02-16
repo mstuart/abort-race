@@ -1,6 +1,6 @@
 {
 	"name": "abort-race",
-	"version": "0.0.0-development",
+	"version": "1.0.0",
 	"description": "Race multiple async operations with automatic AbortSignal cleanup for losers",
 	"license": "MIT",
 	"repository": "mstuart/abort-race",
