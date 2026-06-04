@@ -145,9 +145,10 @@ test('first error wins', async t => {
 			async () => {
 				throw new Error('First error');
 			},
-			async () => delay(10).then(() => {
+			async () => {
+				await delay(10);
 				throw new Error('Second error');
-			}),
+			},
 		]),
 		{message: 'First error'},
 	);

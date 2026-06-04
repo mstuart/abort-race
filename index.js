@@ -48,7 +48,7 @@ export default async function abortRace(tasks, options = {}) {
 	try {
 		const promises = tasks.map(async (task, index) => {
 			const linkedSignal = parentSignal
-				? AbortSignal.any([controllers[index].signal, parentSignal]) // eslint-disable-line n/no-unsupported-features/node-builtins
+				? AbortSignal.any([controllers[index].signal, parentSignal])
 				: controllers[index].signal;
 
 			const result = await task(linkedSignal);
