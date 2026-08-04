@@ -3,7 +3,7 @@ Race multiple async operations with automatic AbortSignal cleanup for losers.
 
 @template T
 @param {Array<(signal: AbortSignal) => Promise<T>>} tasks - Functions that receive an AbortSignal and return a Promise.
-@param {object} [options]
+@param {object} [options] - Optional settings for the race.
 @param {AbortSignal} [options.signal] - An external AbortSignal for cancelling all tasks.
 @returns {Promise<T>} The result of the winning task.
 */
