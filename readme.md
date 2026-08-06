@@ -1,7 +1,16 @@
-# abort-race
+<div align="center">
+  <img src="docs/assets/logo.svg" alt="abort-race — Race multiple async operations with automatic AbortSignal cleanup for losers" width="720">
+</div>
 
-> Race multiple async operations with automatic AbortSignal cleanup for losers
+<p align="center"><strong>Race multiple async operations with automatic AbortSignal cleanup for losers</strong></p>
 
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
+  <a href="https://www.npmjs.com/package/abort-race"><img src="https://img.shields.io/npm/v/abort-race?label=npm" alt="npm"></a>
+  <img src="https://img.shields.io/badge/node-%E2%89%A520-339933.svg" alt="Node 20+">
+</p>
+
+---
 ## Install
 
 ```sh
