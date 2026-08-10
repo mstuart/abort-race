@@ -1,9 +1,9 @@
-export type AbortRaceOptions = {
-	/**
+export interface AbortRaceOptions {
+  /**
 	An external `AbortSignal` for cancelling all tasks.
 	*/
-	signal?: AbortSignal;
-};
+  signal?: AbortSignal;
+}
 
 /**
 Race multiple async operations with automatic `AbortSignal` cleanup for losers.
@@ -33,6 +33,6 @@ console.log(result);
 ```
 */
 export default function abortRace<T>(
-	tasks: ReadonlyArray<(signal: AbortSignal) => Promise<T>>,
-	options?: AbortRaceOptions,
+  tasks: ReadonlyArray<(signal: AbortSignal) => Promise<T>>,
+  options?: AbortRaceOptions
 ): Promise<T>;
