@@ -8,61 +8,61 @@ Race multiple async operations with automatic AbortSignal cleanup for losers.
 @returns {Promise<T>} The result of the winning task.
 */
 export default async function abortRace(tasks, options = {}) {
-	const {signal: parentSignal} = options;
+  const { signal: parentSignal } = options;
 
-	if (parentSignal?.aborted) {
-		throw parentSignal.reason ?? new Error('Aborted');
-	}
+  if (parentSignal?.aborted) {
+    throw parentSignal.reason ?? new Error("Aborted");
+  }
 
-	const controllers = tasks.map(() => new AbortController());
-	let winnerIndex = -1;
+  const controllers = tasks.map(() => new AbortController());
+  let winnerIndex = -1;
 
-	const abortLosers = index => {
-		if (winnerIndex !== -1) {
-			return;
-		}
+  const abortLosers = (index) => {
+    if (winnerIndex !== -1) {
+      return;
+    }
 
-		winnerIndex = index;
+    winnerIndex = index;
 
-		for (const [i, controller] of controllers.entries()) {
-			if (i !== index) {
-				controller.abort(new Error('Race lost'));
-			}
-		}
-	};
+    for (const [i, controller] of controllers.entries()) {
+      if (i !== index) {
+        controller.abort(new Error("Race lost"));
+      }
+    }
+  };
 
-	const abortAll = reason => {
-		for (const controller of controllers) {
-			controller.abort(reason);
-		}
-	};
+  const abortAll = (reason) => {
+    for (const controller of controllers) {
+      controller.abort(reason);
+    }
+  };
 
-	const onParentAbort = () => {
-		abortAll(parentSignal?.reason ?? new Error('Aborted'));
-	};
+  const onParentAbort = () => {
+    abortAll(parentSignal?.reason ?? new Error("Aborted"));
+  };
 
-	if (parentSignal) {
-		parentSignal.addEventListener('abort', onParentAbort, {once: true});
-	}
+  if (parentSignal) {
+    parentSignal.addEventListener("abort", onParentAbort, { once: true });
+  }
 
-	try {
-		const promises = tasks.map(async (task, index) => {
-			const linkedSignal = parentSignal
-				? AbortSignal.any([controllers[index].signal, parentSignal])
-				: controllers[index].signal;
+  try {
+    const promises = tasks.map(async (task, index) => {
+      const linkedSignal = parentSignal
+        ? AbortSignal.any([controllers[index].signal, parentSignal])
+        : controllers[index].signal;
 
-			const result = await task(linkedSignal);
-			abortLosers(index);
-			return result;
-		});
+      const result = await task(linkedSignal);
+      abortLosers(index);
+      return result;
+    });
 
-		return await Promise.race(promises);
-	} catch (error) {
-		abortAll(error);
-		throw error;
-	} finally {
-		if (parentSignal) {
-			parentSignal.removeEventListener('abort', onParentAbort);
-		}
-	}
+    return await Promise.race(promises);
+  } catch (error) {
+    abortAll(error);
+    throw error;
+  } finally {
+    if (parentSignal) {
+      parentSignal.removeEventListener("abort", onParentAbort);
+    }
+  }
 }
