@@ -1,44 +1,47 @@
 {
-	"name": "abort-race",
-	"version": "1.0.0",
-	"description": "Race multiple async operations with automatic AbortSignal cleanup for losers",
-	"license": "MIT",
-	"repository": "mstuart/abort-race",
-	"funding": "https://github.com/sponsors/mstuart",
-	"author": {
-		"name": "Mark Stuart",
-		"email": "mstuart@users.noreply.github.com",
-		"url": "https://github.com/mstuart"
-	},
-	"type": "module",
-	"exports": {
-		"types": "./index.d.ts",
-		"default": "./index.js"
-	},
-	"sideEffects": false,
-	"engines": {
-		"node": ">=22"
-	},
-	"scripts": {
-		"test": "xo && ava && tsd"
-	},
-	"files": [
-		"index.js",
-		"index.d.ts"
-	],
-	"keywords": [
-		"abort",
-		"race",
-		"promise",
-		"signal",
-		"cancel",
-		"abortcontroller",
-		"async",
-		"cleanup"
-	],
-	"devDependencies": {
-		"ava": "^8",
-		"tsd": "^0.33",
-		"xo": "^2.0"
-	}
+  "name": "abort-race",
+  "version": "1.0.0",
+  "description": "Race multiple async operations with automatic AbortSignal cleanup for losers",
+  "keywords": [
+    "abort",
+    "race",
+    "promise",
+    "signal",
+    "cancel",
+    "abortcontroller",
+    "async",
+    "cleanup"
+  ],
+  "repository": "mstuart/abort-race",
+  "funding": "https://github.com/sponsors/mstuart",
+  "license": "MIT",
+  "author": {
+    "name": "Mark Stuart",
+    "email": "mstuart@users.noreply.github.com",
+    "url": "https://github.com/mstuart"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "types": "./index.d.ts",
+    "default": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "check": "ultracite check",
+    "fix": "ultracite fix",
+    "test": "ava && tsd"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.6",
+    "ava": "^8",
+    "tsd": "^0.33",
+    "ultracite": "7.10.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
 }
