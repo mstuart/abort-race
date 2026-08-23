@@ -182,6 +182,14 @@ test("works with 5 tasks", async (t) => {
 
 // Edge cases
 
+test("rejects an empty task list", async (t) => {
+  t.timeout(500);
+  await t.throwsAsync(abortRace([]), {
+    instanceOf: TypeError,
+    message: "Expected at least one task",
+  });
+});
+
 test("task receives an AbortSignal", async (t) => {
   await abortRace([
     (signal) => {
