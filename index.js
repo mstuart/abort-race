@@ -10,8 +10,16 @@ Race multiple async operations with automatic AbortSignal cleanup for losers.
 export default async function abortRace(tasks, options = {}) {
   const { signal: parentSignal } = options;
 
+  if (!Array.isArray(tasks)) {
+    throw new TypeError("Expected `tasks` to be an array");
+  }
+
   if (tasks.length === 0) {
     throw new TypeError("Expected at least one task");
+  }
+
+  if (tasks.some((task) => typeof task !== "function")) {
+    throw new TypeError("Expected every task to be a function");
   }
 
   if (parentSignal?.aborted) {
