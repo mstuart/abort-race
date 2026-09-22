@@ -219,14 +219,12 @@ test("rejects non-function tasks before starting the race", async (t) => {
 
 test("rejects sparse task arrays before starting the race", async (t) => {
   let started = false;
-  const tasks = [
-    () => {
-      started = true;
-      return Promise.resolve();
-    },
-    ,
-    async () => "never reached",
-  ];
+  const tasks = new Array(3);
+  tasks[0] = () => {
+    started = true;
+    return Promise.resolve();
+  };
+  tasks[2] = async () => "never reached";
 
   await t.throwsAsync(abortRace(tasks), {
     instanceOf: TypeError,
