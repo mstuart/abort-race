@@ -18,8 +18,10 @@ export default async function abortRace(tasks, options = {}) {
     throw new TypeError("Expected at least one task");
   }
 
-  if (tasks.some((task) => typeof task !== "function")) {
-    throw new TypeError("Expected every task to be a function");
+  for (const task of tasks) {
+    if (typeof task !== "function") {
+      throw new TypeError("Expected every task to be a function");
+    }
   }
 
   if (parentSignal?.aborted) {

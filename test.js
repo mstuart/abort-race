@@ -217,6 +217,25 @@ test("rejects non-function tasks before starting the race", async (t) => {
   t.false(started);
 });
 
+test("rejects sparse task arrays before starting the race", async (t) => {
+  let started = false;
+  const tasks = [
+    () => {
+      started = true;
+      return Promise.resolve();
+    },
+    ,
+    async () => "never reached",
+  ];
+
+  await t.throwsAsync(abortRace(tasks), {
+    instanceOf: TypeError,
+    message: "Expected every task to be a function",
+  });
+
+  t.false(started);
+});
+
 test("task receives an AbortSignal", async (t) => {
   await abortRace([
     (signal) => {
