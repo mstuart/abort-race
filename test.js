@@ -190,6 +190,50 @@ test("rejects an empty task list", async (t) => {
   });
 });
 
+test("rejects a non-array task list with a clear error", async (t) => {
+  await t.throwsAsync(abortRace(null), {
+    instanceOf: TypeError,
+    message: "Expected `tasks` to be an array",
+  });
+});
+
+test("rejects non-function tasks before starting the race", async (t) => {
+  let started = false;
+
+  await t.throwsAsync(
+    abortRace([
+      () => {
+        started = true;
+        return Promise.resolve();
+      },
+      undefined,
+    ]),
+    {
+      instanceOf: TypeError,
+      message: "Expected every task to be a function",
+    }
+  );
+
+  t.false(started);
+});
+
+test("rejects sparse task arrays before starting the race", async (t) => {
+  let started = false;
+  const tasks = new Array(3);
+  tasks[0] = () => {
+    started = true;
+    return Promise.resolve();
+  };
+  tasks[2] = async () => "never reached";
+
+  await t.throwsAsync(abortRace(tasks), {
+    instanceOf: TypeError,
+    message: "Expected every task to be a function",
+  });
+
+  t.false(started);
+});
+
 test("task receives an AbortSignal", async (t) => {
   await abortRace([
     (signal) => {
