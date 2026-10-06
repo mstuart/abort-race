@@ -65,6 +65,8 @@ Type: `AbortSignal`
 
 An external `AbortSignal` for cancelling all tasks. When this signal aborts, all tasks are aborted.
 
+Parent cancellation also rejects the returned promise, even if a task ignores its signal. Tasks must still cooperate with their signals to stop their underlying work.
+
 ## Related
 
 - [p-race](https://github.com/sindresorhus/p-race) - Race promises
