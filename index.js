@@ -51,8 +51,11 @@ export default async function abortRace(tasks, options = {}) {
     }
   };
 
+  const parentAbort = parentSignal ? Promise.withResolvers() : undefined;
   const onParentAbort = () => {
-    abortAll(parentSignal?.reason ?? new Error("Aborted"));
+    const reason = parentSignal.reason ?? new Error("Aborted");
+    abortAll(reason);
+    parentAbort.reject(reason);
   };
 
   if (parentSignal) {
@@ -70,7 +73,9 @@ export default async function abortRace(tasks, options = {}) {
       return result;
     });
 
-    return await Promise.race(promises);
+    return await Promise.race(
+      parentAbort ? [parentAbort.promise, ...promises] : promises
+    );
   } catch (error) {
     abortAll(error);
     throw error;

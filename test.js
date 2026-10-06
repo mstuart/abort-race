@@ -1,6 +1,44 @@
 import test from "ava";
 import abortRace from "./index.js";
 
+test("parent cancellation rejects even when tasks ignore their signal", async (t) => {
+  t.timeout(500);
+  const parent = new AbortController();
+  const reason = new Error("Cancelled");
+  const result = abortRace(
+    [
+      () =>
+        new Promise(() => {
+          /* Deliberately never settles. */
+        }),
+    ],
+    {
+      signal: parent.signal,
+    }
+  );
+  parent.abort(reason);
+  const error = await t.throwsAsync(result);
+  t.is(error, reason);
+});
+
+test("parent cancellation during task startup rejects the race", async (t) => {
+  t.timeout(500);
+  const parent = new AbortController();
+  const reason = new Error("Cancelled during startup");
+  const result = abortRace(
+    [
+      () => {
+        parent.abort(reason);
+        return new Promise(() => {
+          /* Deliberately never settles. */
+        });
+      },
+    ],
+    { signal: parent.signal }
+  );
+  t.is(await t.throwsAsync(result), reason);
+});
+
 const delay = (ms, value, signal) =>
   new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
