@@ -25,7 +25,7 @@ export default async function abortRace(tasks, options = {}) {
   }
 
   if (parentSignal?.aborted) {
-    throw parentSignal.reason ?? new Error("Aborted");
+    throw parentSignal.reason;
   }
 
   const controllers = tasks.map(() => new AbortController());
@@ -53,7 +53,7 @@ export default async function abortRace(tasks, options = {}) {
 
   const parentAbort = parentSignal ? Promise.withResolvers() : undefined;
   const onParentAbort = () => {
-    const reason = parentSignal.reason ?? new Error("Aborted");
+    const { reason } = parentSignal;
     abortAll(reason);
     parentAbort.reject(reason);
   };

@@ -1,6 +1,32 @@
 import test from "ava";
 import abortRace from "./index.js";
 
+for (const preAborted of [true, false]) {
+  test(`preserves a null parent reason (pre-aborted: ${preAborted})`, async (t) => {
+    const parent = new AbortController();
+    if (preAborted) {
+      parent.abort(null);
+    }
+    const result = abortRace(
+      [
+        () =>
+          new Promise(() => {
+            // Intentionally ignores cancellation to test the parent signal path.
+          }),
+      ],
+      { signal: parent.signal }
+    );
+    if (!preAborted) {
+      parent.abort(null);
+    }
+    const outcome = await result.then(
+      () => ({ resolved: true }),
+      (reason) => ({ reason })
+    );
+    t.deepEqual(outcome, { reason: null });
+  });
+}
+
 test("parent cancellation rejects even when tasks ignore their signal", async (t) => {
   t.timeout(500);
   const parent = new AbortController();
