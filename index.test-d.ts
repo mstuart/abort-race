@@ -27,3 +27,7 @@ expectError(abortRace([123]));
 
 // Invalid usage: tasks don't return promises
 expectError(abortRace([(_signal: AbortSignal) => "sync"]));
+
+expectType<Promise<string | number>>(
+  abortRace([async () => 42, async () => "ready"])
+);

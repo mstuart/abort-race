@@ -36,3 +36,10 @@ export default function abortRace<T>(
   tasks: ReadonlyArray<(signal: AbortSignal) => Promise<T>>,
   options?: AbortRaceOptions
 ): Promise<T>;
+
+export default function abortRace<
+  Tasks extends ReadonlyArray<(signal: AbortSignal) => Promise<unknown>>,
+>(
+  tasks: Tasks,
+  options?: AbortRaceOptions
+): Promise<Awaited<ReturnType<Tasks[number]>>>;
